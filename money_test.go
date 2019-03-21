@@ -5,6 +5,12 @@ import (
 	"testing"
 )
 
+func TestAddition(t *testing.T) {
+	five := NewDollar(5)
+	assert.Equal(t, NewDollar(10), five.Plus(five))
+	assert.Equal(t, NewDollar(15), five.Plus(NewDollar(10)))
+}
+
 func TestMultiplication(t *testing.T) {
 	five := NewDollar(5)
 	assert.Equal(t, NewDollar(10), five.Times(2))

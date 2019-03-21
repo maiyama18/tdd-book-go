@@ -12,6 +12,9 @@ func NewFranc(amount int) *Money {
 	return &Money{Amount: amount, Currency: "CHF"}
 }
 
+func (m *Money) Plus(o *Money) *Money {
+	return &Money{Amount: m.Amount + o.Amount, Currency: m.Currency}
+}
 func (m *Money) Times(n int) *Money {
 	return &Money{Amount: n * m.Amount, Currency: m.Currency}
 }
