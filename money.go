@@ -1,7 +1,7 @@
 package main
 
 type Expression interface {
-	Reduce(to string) *Money
+	Reduce(bank *Bank, to string) *Money
 }
 
 type Money struct {
@@ -25,8 +25,9 @@ func (m *Money) Plus(o *Money) Expression {
 func (m *Money) Times(n int) *Money {
 	return &Money{Amount: n * m.Amount, Currency: m.Currency}
 }
-func (m *Money) Reduce(to string) *Money {
-	return m
+func (m *Money) Reduce(bank *Bank, to string) *Money {
+	rate := bank.Rate(m.Currency, to)
+	return NewMoney(m.Amount/rate, to)
 }
 func (m *Money) Equals(o *Money) bool {
 	return m.Currency == o.Currency && m.Amount == o.Amount
@@ -41,17 +42,42 @@ func NewSum(augend, addend *Money) *Sum {
 	return &Sum{Augend: augend, Addend: addend}
 }
 
-func (s *Sum) Reduce(to string) *Money {
+func (s *Sum) Reduce(bank *Bank, to string) *Money {
 	amount := s.Augend.Amount + s.Addend.Amount
 	return NewMoney(amount, to)
 }
 
-type Bank struct{}
-
-func NewBank() *Bank {
-	return &Bank{}
+type Bank struct {
+	rates map[Pair]int
 }
 
+func NewBank() *Bank {
+	return &Bank{
+		rates: make(map[Pair]int),
+	}
+}
+
+func (b *Bank) AddRate(from, to string, rate int) {
+	pair := NewPair(from, to)
+	b.rates[pair] = rate
+}
 func (b *Bank) Reduce(src Expression, to string) *Money {
-	return src.Reduce(to)
+	return src.Reduce(b, to)
+}
+func (b *Bank) Rate(from, to string) int {
+	pair := NewPair(from, to)
+	rate, ok := b.rates[pair]
+	if !ok {
+		return 1
+	}
+	return rate
+}
+
+type Pair struct {
+	From string
+	To   string
+}
+
+func NewPair(from, to string) Pair {
+	return Pair{From: from, To: to}
 }
