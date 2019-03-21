@@ -1,5 +1,9 @@
 package main
 
+type Money interface {
+	Times(n int) Money
+}
+
 type Dollar struct {
 	amount int
 }
