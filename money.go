@@ -1,6 +1,8 @@
 package main
 
-type Expression interface{}
+type Expression interface {
+	Reduce(to string) *Money
+}
 
 type Money struct {
 	Amount   int
@@ -23,6 +25,9 @@ func (m *Money) Plus(o *Money) Expression {
 func (m *Money) Times(n int) *Money {
 	return &Money{Amount: n * m.Amount, Currency: m.Currency}
 }
+func (m *Money) Reduce(to string) *Money {
+	return m
+}
 func (m *Money) Equals(o *Money) bool {
 	return m.Currency == o.Currency && m.Amount == o.Amount
 }
@@ -36,14 +41,17 @@ func NewSum(augend, addend *Money) *Sum {
 	return &Sum{Augend: augend, Addend: addend}
 }
 
+func (s *Sum) Reduce(to string) *Money {
+	amount := s.Augend.Amount + s.Addend.Amount
+	return NewMoney(amount, to)
+}
+
 type Bank struct{}
 
 func NewBank() *Bank {
 	return &Bank{}
 }
 
-func (b *Bank) Reduce(src Expression, dst string) *Money {
-	sum := src.(*Sum)
-	amount := sum.Augend.Amount + sum.Addend.Amount
-	return NewMoney(amount, dst)
+func (b *Bank) Reduce(src Expression, to string) *Money {
+	return src.Reduce(to)
 }
