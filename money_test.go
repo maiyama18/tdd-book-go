@@ -7,8 +7,6 @@ import (
 
 func TestMultiplication(t *testing.T) {
 	five := NewDollar(5)
-	product := five.Times(2)
-	assert.Equal(t, 10, product.Amount)
-	product = five.Times(3)
-	assert.Equal(t, 15, product.Amount)
+	assert.Equal(t, NewDollar(10), five.Times(2))
+	assert.Equal(t, NewDollar(15), five.Times(3))
 }
