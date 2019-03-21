@@ -64,3 +64,14 @@ func TestConvertCurrency(t *testing.T) {
 	reduced := bank.Reduce(NewFranc(2), "USD")
 	assert.Equal(t, NewDollar(1), reduced)
 }
+
+func TestMixedAddition(t *testing.T) {
+	bank := NewBank()
+	bank.AddRate("CHF", "USD", 2)
+
+	fiveBucks := NewDollar(5)
+	tenFrancs := NewFranc(10)
+
+	reduced := bank.Reduce(fiveBucks.Plus(tenFrancs), "USD")
+	assert.Equal(t, NewDollar(10), reduced)
+}

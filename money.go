@@ -43,8 +43,9 @@ func NewSum(augend, addend *Money) *Sum {
 }
 
 func (s *Sum) Reduce(bank *Bank, to string) *Money {
-	amount := s.Augend.Amount + s.Addend.Amount
-	return NewMoney(amount, to)
+	augendAmount := s.Augend.Amount / bank.Rate(s.Augend.Currency, to)
+	addendAmount := s.Addend.Amount / bank.Rate(s.Addend.Currency, to)
+	return NewMoney(augendAmount+addendAmount, to)
 }
 
 type Bank struct {
