@@ -16,3 +16,8 @@ func TestFrancMultiplication(t *testing.T) {
 	assert.Equal(t, NewFranc(10), five.Times(2))
 	assert.Equal(t, NewFranc(15), five.Times(3))
 }
+
+func TestEquality(t *testing.T) {
+	assert.True(t, NewDollar(5).Equals(NewDollar(5)))
+	assert.True(t, NewFranc(5).Equals(NewFranc(5)))
+}
