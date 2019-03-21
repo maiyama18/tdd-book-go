@@ -1,13 +1,13 @@
 package main
 
 type Dollar struct {
-	Amount int
+	amount int
 }
 
 func NewDollar(amount int) *Dollar {
-	return &Dollar{Amount: amount}
+	return &Dollar{amount: amount}
 }
 
 func (d *Dollar) Times(n int) *Dollar {
-	return NewDollar(d.Amount * n)
+	return NewDollar(d.amount * n)
 }
